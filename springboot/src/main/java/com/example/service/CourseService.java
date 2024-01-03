@@ -19,4 +19,17 @@ public class CourseService {
         List<Course> courses = courseMapper.selectAll(course);
         return PageInfo.of(courses);
     }
+
+
+    public void addCourse(Course course) {
+        courseMapper.insert(course);
+    }
+
+    public void updateCourse(Course course) {
+        courseMapper.updateByPrimaryKey(course);
+    }
+
+    public void deleteCourse(String courseno) {
+        courseMapper.deleteByPrimaryKey(courseno);
+    }
 }

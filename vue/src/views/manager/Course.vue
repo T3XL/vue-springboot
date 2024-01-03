@@ -7,7 +7,7 @@
       <el-button type="info" @click="reset">重置</el-button>
     </div>
     <div class="card" style="margin-bottom: 10px">
-      <el-button type="primary">新增</el-button>
+      <el-button type="primary" @click="add">新增</el-button>
     </div>
 
     <div class="card" style="margin-bottom: 10px">
@@ -20,8 +20,8 @@
         <el-table-column prop="experimenttype" label="实验方式"></el-table-column>
         <el-table-column>
           <template #default="scope">
-            <el-button type="primary" size="small">编辑</el-button>
-            <el-button type="danger" size="small">删除</el-button>
+            <el-button type="primary" size="small" @click="edit(scope.row)">编辑</el-button>
+            <el-button type="danger" size="small" @click="del(scope.row.courseno)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -31,12 +31,40 @@
                      @current-change="handleCurrentChange"
                      background layout="prev, pager, next" :total="data.total"></el-pagination>
     </div>
+
+    <el-dialog v-model="data.dialogVisible" title="课程信息">
+      <el-form :model="data.form" label-width="80px" style="padding-right: 30px">
+        <el-form-item label="课程名称" label-width="100px">
+          <el-input v-model="data.form.coursename" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="课程编号" label-width="100px">
+          <el-input v-model="data.form.courseno" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学分" label-width="100px">
+          <el-input v-model="data.form.credit" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学时" label-width="100px">
+          <el-input v-model="data.form.credithour" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="课程类型" label-width="100px">
+          <el-input v-model="data.form.coursetype" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="实验方式" label-width="100px">
+          <el-input v-model="data.form.experimenttype" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="primary" @click="save">保存</el-button>
+        <el-button @click="data.dialogVisible = false">取消</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script setup>
 import { reactive } from "vue";
 import { Search } from '@element-plus/icons-vue';
 import request from "../../utils/request";
+import {ElMessage, ElMessageBox} from "element-plus";
 const data = reactive({
     name: '',
     courseno: '',
@@ -44,6 +72,8 @@ const data = reactive({
     total: 0,
     page: 1,
     size: 11,
+    dialogVisible: false,
+    form: {},
 })
 const load = () => {
   request.get('/course/courselist',{
@@ -66,6 +96,47 @@ const reset = () => {
   data.name = '';
   data.courseno = '';
   load();
+}
+const add = () => {
+  data.form={};
+  data.dialogVisible = true;
+}
+const save = () => {
+  request.request({
+    url: data.form.courseno ? '/course/updatecourse' : '/course/addcourse',
+    method: data.form.courseno ? 'PUT' : 'POST',
+    data: data.form,
+  }).then(res=>{
+    if(res.code === '200'){
+      data.dialogVisible = false;
+      load();
+      ElMessage.success(res.msg);
+    }else {
+      ElMessage.error(res.msg);
+    }
+  })
+}
+const edit = (row) => {
+  data.form = row;
+  data.dialogVisible = true;
+}
+const del = (courseno) => {
+  ElMessageBox.confirm('确认删除该课程吗？', '提示', {type: 'warning'}).then(() => {
+    request.delete('/course/deletecourse/'+courseno).then(res=>{
+      if(res.code === '200'){
+        load();
+        ElMessage.success(res.msg);
+      }else {
+        ElMessage.error(res.msg);
+      }
+    })
+  }).catch(() => {
+    ElMessage({
+      type: 'info',
+      message: '取消删除'
+    });
+  });
+
 }
 </script>
 

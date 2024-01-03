@@ -4,10 +4,7 @@ import com.example.common.Result;
 import com.example.entity.Course;
 import com.example.service.CourseService;
 import com.github.pagehelper.PageInfo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -24,4 +21,20 @@ public class CourseController {
         PageInfo<Course> course = courseService.getCourse(page, size, courses);
         return Result.success(course);
     }
+    @PostMapping("/addcourse")
+    public Result addCourse(@RequestBody Course course){
+        courseService.addCourse(course);
+        return Result.success();
+    }
+    @PutMapping("/updatecourse")
+    public Result updateCourse(@RequestBody Course course){
+        courseService.updateCourse(course);
+        return Result.success();
+    }
+    @DeleteMapping("/deletecourse/{courseno}")
+    public Result deleteCourse(@PathVariable String courseno){
+        courseService.deleteCourse(courseno);
+        return Result.success();
+    }
+
 }
