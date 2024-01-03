@@ -34,6 +34,10 @@
               <el-icon><Document /></el-icon>
               <span>课程信息</span>
             </el-menu-item>
+            <el-menu-item index="/experiment">
+              <el-icon><Document /></el-icon>
+              <span>实验信息</span>
+            </el-menu-item>
           </el-sub-menu>
           <el-menu-item index="/person">
             <el-icon><User /></el-icon>

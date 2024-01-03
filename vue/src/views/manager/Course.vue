@@ -74,6 +74,7 @@ const data = reactive({
     size: 11,
     dialogVisible: false,
     form: {},
+    flag: false
 })
 const load = () => {
   request.get('/course/courselist',{
@@ -98,13 +99,14 @@ const reset = () => {
   load();
 }
 const add = () => {
+  data.flag = false;
   data.form={};
   data.dialogVisible = true;
 }
 const save = () => {
   request.request({
-    url: data.form.courseno ? '/course/updatecourse' : '/course/addcourse',
-    method: data.form.courseno ? 'PUT' : 'POST',
+    url: data.flag ? '/course/updatecourse' : '/course/addcourse',
+    method: data.flag ? 'PUT' : 'POST',
     data: data.form,
   }).then(res=>{
     if(res.code === '200'){
@@ -117,6 +119,7 @@ const save = () => {
   })
 }
 const edit = (row) => {
+  data.flag = true;
   data.form = row;
   data.dialogVisible = true;
 }
