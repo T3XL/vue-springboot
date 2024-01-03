@@ -1,5 +1,4 @@
 
-
 create database if not exists `student`
     character set utf8mb4
     collate utf8mb4_unicode_ci;
@@ -17,14 +16,13 @@ CREATE TABLE `courses`  (
   `credithour` int NULL DEFAULT NULL COMMENT '学时',
   `coursetype` int NULL DEFAULT NULL COMMENT '课程类型：1必修，2选修',
   `experimenttype` int NULL DEFAULT NULL COMMENT '实验方式：1单开实验，2课内实验',
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`courseno` DESC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of courses
 -- ----------------------------
-INSERT INTO `courses` VALUES ('210731104001', '网络安全实验', 1, 22, 1, 1, NULL);
-INSERT INTO `courses` VALUES ('210731100801', '程序设计基础实验', 1, 22, 1, 1, NULL);
-
+INSERT INTO `courses` VALUES ('210731104001', '网络安全实验', 1, 22, 1, 1);
+INSERT INTO `courses` VALUES ('210731100801', '程序设计基础实验', 1, 22, 1, 1);
+INSERT INTO `courses` VALUES ('210731100802', '程序设计高级实验', 1, 22, 1, 1);
 SET FOREIGN_KEY_CHECKS = 1;
