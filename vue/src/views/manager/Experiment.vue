@@ -42,7 +42,14 @@
           <el-input v-model="data.form.itemno" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="课程编号" label-width="100px">
-          <el-input v-model="data.form.courseno" autocomplete="off"></el-input>
+          <el-select v-model="data.form.courseno" placeholder="请选择课程" style="width:100%">
+            <el-option
+                v-for="item in data.course"
+                :key="item.courseno"
+                :label="item.coursename"
+                :value="item.courseno"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="实验学时" label-width="100px">
           <el-input v-model="data.form.itemhour" autocomplete="off"></el-input>
@@ -67,9 +74,11 @@ import { Search } from '@element-plus/icons-vue';
 import request from "../../utils/request";
 import {ElMessage, ElMessageBox} from "element-plus";
 const data = reactive({
+  course:[],
   name: '',
   itemno: '',
   courseno: '',
+  coursename: '',
   tableData:[],
   total: 0,
   page: 1,
@@ -103,6 +112,18 @@ const reset = () => {
   load();
 }
 const add = () => {
+  request.get('/course/courselist', {
+    params: {
+      page: data.page,
+      size: data.size,
+      coursename: data.coursename,
+      courseno: data.courseno
+    }
+  }).then(res => {
+    data.course = res.data?.list || [];
+    if(res.code === '200')
+      console.log(data.course);
+  })
   data.flag = false;
   data.form={};
   data.dialogVisible = true;
